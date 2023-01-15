@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.mapper.RefundMapper">
+
+    <insert id="addRefund" useGeneratedKeys="true" keyProperty="id">
+        insert into refund(
+        paymentId,
+        amount
+        )values(
+        #{paymentId},
+        #{amount}
+        )
+    </insert>
+    <update id="updateStatusByRefundId">
+        update refund set status = #{status} where id = #{refundId}
+    </update>
+
+
+</mapper>

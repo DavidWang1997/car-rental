@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.mapper.OrderMapper">
+
+    <select id="selectOrderCountByTimeAndCarId" resultType="Integer">
+        select count(1) from `cardb`.`order`
+        where car_id = #{carId} and status &lt; '4' and
+        (#{startTime} &gt; reserve_start_time and #{startTime} &lt; reserve_end_time) or (#{endTime} &gt;
+        reserve_start_time and #{endTime} &lt; reserve_end_time)
+        or (#{startTime} &lt;= reserve_start_time and #{endTime} &gt;= reserve_end_time)
+    </select>
+    <select id="selectOrderById" resultType="com.exam.module.entity.Order">
+        select * from `cardb`.`order` where id = #{orderId}
+    </select>
+    <select id="selectOrderByUserId" resultType="com.exam.module.entity.Order">
+        select * from `cardb`.`order` where user_id = #{userId}
+    </select>
+
+    <select id="selectOrderByTime" resultType="com.exam.module.entity.Order">
+        select * from `cardb`.`order` where status &lt; 4 and reserve_end_time &gt; #{today}
+    </select>
+
+
+    <insert id="addOrder" parameterType="com.exam.module.entity.Order" useGeneratedKeys="true" keyProperty="id">
+        insert into `cardb`.`order`(
+        user_id,
+        car_id,
+        reserve_start_time,
+        reserve_end_time,
+        days,
+        amount
+        )values(
+        #{userId},
+        #{carId},
+        #{reserveStartTime},
+        #{reserveEndTime},
+        #{days},
+        #{amount}
+        )
+    </insert>
+
+    <update id="updateStatusByOrderId">
+        update `cardb`.`order` set status = #{status} where id = #{orderId}
+    </update>
+
+
+</mapper>

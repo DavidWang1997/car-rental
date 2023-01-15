@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.mapper.CarMapper">
+
+
+    <select id="selectAvailableCarByTime" resultType="com.exam.module.entity.Car">
+        select * from car
+        where id not in (
+            select car_id from order
+            where status &lt; 4 and (#{startTime} &gt; startTime and #{startTime} &lt; endTime) or (#{endTime} &gt; startTime and #{endTime} &lt; endTime)
+                or (#{startTime} &lt;= startTime and #{endTime} &gt;= endTime)
+        )
+    </select>
+
+    <select id="selectAvailableCarModelByTime" resultType="com.exam.module.entity.CarModel">
+        select * from car_model where car_model.id in(
+        select distinct car_model_id from car c
+        where c.id not in (
+            select o.car_id from `order` o
+            where o.status &lt; 4 and ((#{startTime, jdbcType=TIMESTAMP} &gt; reserve_start_time and #{startTime, jdbcType=TIMESTAMP} &lt; reserve_end_time)
+                or (#{endTime, jdbcType=TIMESTAMP} &gt; reserve_start_time and #{endTime, jdbcType=TIMESTAMP} &lt; reserve_end_time)
+                or (#{startTime, jdbcType=TIMESTAMP} &lt;= reserve_start_time and #{endTime, jdbcType=TIMESTAMP} &gt;= reserve_end_time))
+        )
+        )
+    </select>
+
+    <select id="selectAvailableCarIdByTimeAndModel" resultType="Integer">
+        select distinct car_id from car
+        where model_id = #{modelId} and id not in (
+        select car_id from order
+        where status &lt; 4 and (#{startTime} &gt; startTime and #{startTime} &lt; endTime) or (#{endTime} &gt; startTime and #{endTime} &lt; endTime)
+        or (#{startTime} &lt;= startTime and #{endTime} &gt;= endTime)
+        )
+    </select>
+    <select id="selectCars" resultType="com.exam.module.entity.Car">
+        select * from car
+    </select>
+
+
+</mapper>

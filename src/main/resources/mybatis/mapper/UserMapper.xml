@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.exam.dao.mapper.UserMapper">
+
+    <insert id="addUser" parameterType="com.exam.module.entity.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            user_name,
+            password,
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            #{userName},
+            #{password},
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+        </trim>
+    </insert>
+
+    <select id="selectUserByName" parameterType="String" resultType="com.exam.module.entity.User">
+        select * from user
+        <where>
+            user_name = #{user_name}
+        </where>
+    </select>
+
+
+</mapper>
