@@ -1,12 +1,14 @@
 package com.exam.util;
 
+import static com.exam.constant.Constant.TIMEZONE_ADDITION;
+
 /**
  * 时间工具类
  *
  * @author wangpeng
  */
 public class TimeUtil {
-    private static final long TIMEZONE_ADDITION = 8 * 60 * 60 * 1000L;
+
 
     /**
      * 获取北京时间毫秒数

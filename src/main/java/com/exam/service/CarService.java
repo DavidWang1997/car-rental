@@ -1,6 +1,5 @@
 package com.exam.service;
 
-import com.exam.dao.mapper.CarMapper;
 import com.exam.module.entity.CarModel;
 import com.exam.module.vo.DurationVo;
 import com.exam.service.cache.CacheManagerService;
@@ -16,8 +15,6 @@ import java.util.List;
  */
 @Service("carService")
 public class CarService {
-    @Resource
-    private CarMapper carMapper;
 
     @Resource
     private CacheManagerService cacheManagerService;

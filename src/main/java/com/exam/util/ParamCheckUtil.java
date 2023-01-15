@@ -14,9 +14,9 @@ import java.util.Objects;
  */
 public class ParamCheckUtil {
     public static boolean checkNotNull(DurationVo durationVo) {
-        return !(Objects.isNull(durationVo) || Objects.isNull(durationVo.getStartTime()) || Objects.isNull(durationVo.getEndTime()))
-                && durationVo.getEndTime().getTime() > durationVo.getStartTime().getTime()
-                && durationVo.getStartTime().getTime() < System.currentTimeMillis();
+        return !(Objects.isNull(durationVo) || Objects.isNull(durationVo.getStartTime()) || Objects.isNull(durationVo.getEndTime())
+                || durationVo.getEndTime().getTime() <= durationVo.getStartTime().getTime()
+                || durationVo.getStartTime().getTime() < System.currentTimeMillis());
     }
 
     public static boolean checkNotNull(LoginQuery loginQuery) {

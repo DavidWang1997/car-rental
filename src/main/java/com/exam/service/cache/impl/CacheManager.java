@@ -22,6 +22,8 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.exam.constant.Constant.*;
+
 /**
  * 汽车可用时间段信息缓存类
  *
@@ -34,12 +36,9 @@ public class CacheManager implements CacheManagerService {
     private static Map<Integer, List<Integer>> carModelRelationMap = new HashMap<>();
 
     private static Map<Integer, CarModel> carModelMap = new HashMap<>();
-    private volatile Map<Integer, TreeMap<Integer, BitSet>> carScheduleMap = new ConcurrentHashMap<>();
+    private static volatile Map<Integer, TreeMap<Integer, BitSet>> carScheduleMap = new ConcurrentHashMap<>();
 
-    private static final int TEN_MINS_PER_DAY = 24 * 6;
-    private static final long MILL_SEC_PER_DAY = 24 * 60 * 60 * 1000L;
 
-    private static final long MILL_SEC_PER_TEN_MINS = 10 * 60 * 1000L;
 
     @Resource
     private OrderMapper orderMapper;
@@ -62,7 +61,7 @@ public class CacheManager implements CacheManagerService {
             carModelMap.put(carModel.getId(), carModel);
         }
         LOGGER.info("init carModel done, size = {}", carModels.size());
-        LOGGER.info(JSON.toJSONString(carModels));
+        LOGGER.debug(JSON.toJSONString(carModels));
         List<Car> cars = carMapper.selectCars();
         for(Car car: cars){
             if(!carModelRelationMap.containsKey(car.getCarModelId())){
@@ -70,8 +69,8 @@ public class CacheManager implements CacheManagerService {
             }
             carModelRelationMap.get(car.getCarModelId()).add(car.getId());
         }
-        LOGGER.info(JSON.toJSONString(cars));
-        LOGGER.info(JSON.toJSONString(carModelRelationMap));
+        LOGGER.debug(JSON.toJSONString(cars));
+        LOGGER.debug(JSON.toJSONString(carModelRelationMap));
         LOGGER.info("init car done, size = {}", cars.size());
 
         List<Order> orders = orderMapper.selectOrderByTime(new Date());
@@ -81,7 +80,7 @@ public class CacheManager implements CacheManagerService {
             vo.setEndTime(order.getReserveEndTime());
             addCarReserveInfo(vo, order.getCarId());
         }
-        LOGGER.info(JSON.toJSONString(orders));
+        LOGGER.debug(JSON.toJSONString(orders));
 
         LOGGER.info("init order done, size = {}", orders.size());
 
@@ -129,6 +128,7 @@ public class CacheManager implements CacheManagerService {
             // 更新位集
             map.get(entry.getKey()).or(entry.getValue());
         }
+        LOGGER.info(JSON.toJSONString(carScheduleMap));
     }
 
     /**
@@ -220,7 +220,6 @@ public class CacheManager implements CacheManagerService {
     public Integer isAvailableCarModel(DurationVo vo, Integer carModelId) {
         // 没有此种车型
         if (CollectionUtils.isEmpty(carModelRelationMap.get(carModelId))) {
-            System.out.println(carModelRelationMap.size());
             LOGGER.info("没有此种车型{}",carModelId);
             return null;
         }
@@ -282,11 +281,11 @@ public class CacheManager implements CacheManagerService {
     private Map<Integer, BitSet> convertToBitSet(DurationVo durationVo) {
         Map<Integer, BitSet> map = new TreeMap<>();
 
-        long startDay = durationVo.getStartTime().getTime() / MILL_SEC_PER_DAY;
-        int startIndex = (int) ((durationVo.getStartTime().getTime() % MILL_SEC_PER_DAY) / MILL_SEC_PER_TEN_MINS);
+        long startDay = (durationVo.getStartTime().getTime() + TIMEZONE_ADDITION)  / MILL_SEC_PER_DAY;
+        int startIndex = (int) (((durationVo.getStartTime().getTime() + TIMEZONE_ADDITION) % MILL_SEC_PER_DAY) / MILL_SEC_PER_TEN_MINS);
 
-        long endDay = durationVo.getEndTime().getTime() / MILL_SEC_PER_DAY;
-        int endIndex = (int) ((durationVo.getEndTime().getTime() % MILL_SEC_PER_DAY) / MILL_SEC_PER_TEN_MINS);
+        long endDay = (durationVo.getEndTime().getTime() + TIMEZONE_ADDITION) / MILL_SEC_PER_DAY;
+        int endIndex = (int) (((durationVo.getEndTime().getTime() + TIMEZONE_ADDITION) % MILL_SEC_PER_DAY) / MILL_SEC_PER_TEN_MINS);
 
         // 预定区间在同一天内
         if (startDay == endDay) {

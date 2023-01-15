@@ -5,9 +5,7 @@ import com.exam.module.vo.DurationVo;
 import com.exam.service.OrderService;
 import com.exam.util.HttpUtil;
 import com.exam.util.ParamCheckUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,11 +27,16 @@ public class OrderController {
     @ResponseBody
     @ApiOperation(value = "预定")
     @ApiImplicitParam(value = "鉴权token", name = "token", paramType = "header", dataType = "String", required = true)
+    @ApiResponses({
+            @ApiResponse(code = 1001, message = "参数校验不通过"),
+            @ApiResponse(code = 3001, message = "预定失败"),
+            @ApiResponse(code = 3005, message = "车型不存在"),
+    })
     public Response reserve(HttpServletRequest request, @RequestParam Integer modelId, @RequestBody DurationVo durationVo) {
 
         Integer userId = HttpUtil.getUserId(request);
 
-        if (userId == null || modelId == null || ParamCheckUtil.checkNotNull(durationVo)) {
+        if (userId == null || modelId == null || !ParamCheckUtil.checkNotNull(durationVo)) {
             return Response.paramCheckFail();
         }
 
@@ -44,6 +47,12 @@ public class OrderController {
     @ResponseBody
     @ApiOperation(value = "支付订单")
     @ApiImplicitParam(value = "鉴权token", name = "token", paramType = "header", dataType = "String", required = true)
+    @ApiResponses({
+            @ApiResponse(code = 1001, message = "参数校验不通过"),
+            @ApiResponse(code = 2004, message = "用户权限不足"),
+            @ApiResponse(code = 3003, message = "当前状态不支持付款"),
+            @ApiResponse(code = 3004, message = "订单不存在"),
+    })
     public Response pay(HttpServletRequest request, @RequestBody Integer orderId) {
         Integer userId = HttpUtil.getUserId(request);
         if (userId == null || orderId == null) {
@@ -57,6 +66,9 @@ public class OrderController {
     @ResponseBody
     @ApiOperation(value = "查询本用户订单")
     @ApiImplicitParam(value = "鉴权token", name = "token", paramType = "header", dataType = "String", required = true)
+    @ApiResponses({
+            @ApiResponse(code = 1001, message = "参数校验不通过"),
+    })
     public Response query(HttpServletRequest request) {
         Integer userId = HttpUtil.getUserId(request);
         if (userId == null) {
@@ -69,6 +81,12 @@ public class OrderController {
     @ResponseBody
     @ApiOperation(value = "取消订单")
     @ApiImplicitParam(value = "鉴权token", name = "token", paramType = "header", dataType = "String", required = true)
+    @ApiResponses({
+            @ApiResponse(code = 1001, message = "参数校验不通过"),
+            @ApiResponse(code = 2004, message = "用户权限不足"),
+            @ApiResponse(code = 3002, message = "当前状态不支持取消"),
+            @ApiResponse(code = 3004, message = "订单不存在"),
+    })
     public Response cancel(HttpServletRequest request, @RequestBody Integer orderId) {
         Integer userId = HttpUtil.getUserId(request);
         if (orderId == null) {

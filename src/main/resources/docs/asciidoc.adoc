@@ -1,0 +1,683 @@
+= Car Rental Api Document
+
+
+[[_overview]]
+== 概览
+
+=== 版本信息
+[%hardbreaks]
+__版本__ : 1.0.0
+
+
+=== URI scheme
+[%hardbreaks]
+__域名__ : localhost:8080
+__基础路径__ : /
+
+
+=== 标签
+
+* CarController : Car Controller
+* OrderController : Order Controller
+* UserController : User Controller
+
+
+
+
+[[_paths]]
+== 资源
+
+[[_carcontroller_resource]]
+=== CarController
+Car Controller
+
+
+[[_queryusingpost]]
+==== 查询指定时间段内的可用车型信息
+....
+POST /car/query
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Header**|**token** +
+__可选__|令牌|string
+|**Body**|**durationVo** +
+__必填__|durationVo|<<_durationvo,DurationVo>>
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**1**|成功|无内容
+|**1001**|参数校验不通过|无内容
+|**2**|失败|无内容
+|**200**|OK|<<_response,Response>>
+|**3**|系统异常|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/car/query
+----
+
+
+====== 请求 header
+[source,json]
+----
+"string"
+----
+
+
+====== 请求 body
+[source,json]
+----
+{
+  "endTime" : "2023-01-26 13:00:10",
+  "startTime" : "2023-01-25 13:00:10"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string"
+}
+----
+
+
+[[_ordercontroller_resource]]
+=== OrderController
+Order Controller
+
+
+[[_cancelusingpost]]
+==== 取消订单
+....
+POST /order/cancel
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Header**|**token** +
+__必填__|鉴权token|string
+|**Body**|**orderId** +
+__必填__|orderId|integer (int32)
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**1**|成功|无内容
+|**1001**|参数校验不通过|无内容
+|**2**|失败|无内容
+|**200**|OK|<<_response,Response>>
+|**2004**|用户权限不足|无内容
+|**3**|系统异常|无内容
+|**3002**|当前状态不支持取消|无内容
+|**3004**|订单不存在|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/order/cancel
+----
+
+
+====== 请求 header
+[source,json]
+----
+"string"
+----
+
+
+====== 请求 body
+[source,json]
+----
+{ }
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string"
+}
+----
+
+
+[[_payusingpost]]
+==== 支付订单
+....
+POST /order/pay
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Header**|**token** +
+__必填__|鉴权token|string
+|**Body**|**orderId** +
+__必填__|orderId|integer (int32)
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**1**|成功|无内容
+|**1001**|参数校验不通过|无内容
+|**2**|失败|无内容
+|**200**|OK|<<_response,Response>>
+|**2004**|用户权限不足|无内容
+|**3**|系统异常|无内容
+|**3003**|当前状态不支持付款|无内容
+|**3004**|订单不存在|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/order/pay
+----
+
+
+====== 请求 header
+[source,json]
+----
+"string"
+----
+
+
+====== 请求 body
+[source,json]
+----
+{ }
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string"
+}
+----
+
+
+[[_queryusingget]]
+==== 查询本用户订单
+....
+GET /order/query
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Header**|**token** +
+__必填__|鉴权token|string
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**1**|成功|无内容
+|**1001**|参数校验不通过|无内容
+|**2**|失败|无内容
+|**200**|OK|<<_response,Response>>
+|**3**|系统异常|无内容
+|===
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/order/query
+----
+
+
+====== 请求 header
+[source,json]
+----
+"string"
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string"
+}
+----
+
+
+[[_reserveusingpost]]
+==== 预定
+....
+POST /order/reserve
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Header**|**token** +
+__必填__|鉴权token|string
+|**Query**|**modelId** +
+__必填__|modelId|integer (int32)
+|**Body**|**durationVo** +
+__必填__|durationVo|<<_durationvo,DurationVo>>
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**1**|成功|无内容
+|**1001**|参数校验不通过|无内容
+|**2**|失败|无内容
+|**200**|OK|<<_response,Response>>
+|**3**|系统异常|无内容
+|**3001**|预定失败|无内容
+|**3005**|车型不存在|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/order/reserve
+----
+
+
+====== 请求 header
+[source,json]
+----
+"string"
+----
+
+
+====== 请求 query
+[source,json]
+----
+{
+  "modelId" : 0
+}
+----
+
+
+====== 请求 body
+[source,json]
+----
+{
+  "endTime" : "2023-01-26 13:00:10",
+  "startTime" : "2023-01-25 13:00:10"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string"
+}
+----
+
+
+[[_usercontroller_resource]]
+=== UserController
+User Controller
+
+
+[[_loginusingpost]]
+==== 用户登录接口
+....
+POST /user/login
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Header**|**token** +
+__可选__|令牌|string
+|**Body**|**query** +
+__必填__|query|<<_loginquery,LoginQuery>>
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**1**|成功|无内容
+|**1001**|参数校验不通过|无内容
+|**2**|失败|无内容
+|**200**|OK|<<_response,Response>>
+|**2001**|用户不存在|无内容
+|**2003**|用户密码错误|无内容
+|**3**|系统异常|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/user/login
+----
+
+
+====== 请求 header
+[source,json]
+----
+"string"
+----
+
+
+====== 请求 body
+[source,json]
+----
+{
+  "password" : "asdf1234",
+  "userName" : "Tom"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string"
+}
+----
+
+
+[[_registerusingpost]]
+==== 用户注册接口
+....
+POST /user/register
+....
+
+
+===== 参数
+
+[options="header", cols=".^2,.^3,.^9,.^4"]
+|===
+|类型|名称|说明|类型
+|**Header**|**token** +
+__可选__|令牌|string
+|**Body**|**userVo** +
+__必填__|userVo|<<_uservo,UserVo>>
+|===
+
+
+===== 响应
+
+[options="header", cols=".^2,.^14,.^4"]
+|===
+|HTTP代码|说明|类型
+|**1**|成功|无内容
+|**1001**|参数校验不通过|无内容
+|**2**|失败|无内容
+|**200**|OK|<<_response,Response>>
+|**2002**|用户名已存在|无内容
+|**3**|系统异常|无内容
+|===
+
+
+===== 消耗
+
+* `application/json`
+
+
+===== 生成
+
+* `*/*`
+
+
+===== HTTP请求示例
+
+====== 请求 path
+----
+/user/register
+----
+
+
+====== 请求 header
+[source,json]
+----
+"string"
+----
+
+
+====== 请求 body
+[source,json]
+----
+{
+  "email" : "000000000@qq.com",
+  "password" : "asdf1234",
+  "phone" : "000-0000-0000",
+  "userName" : "Tom"
+}
+----
+
+
+===== HTTP响应示例
+
+====== 响应 200
+[source,json]
+----
+{
+  "code" : 0,
+  "data" : "object",
+  "msg" : "string"
+}
+----
+
+
+
+
+[[_definitions]]
+== 定义
+
+[[_durationvo]]
+=== DurationVo
+时间段
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**endTime** +
+__必填__|预定结束时间 +
+**样例** : `"2023-01-26 13:00:10"`|string (date-time)
+|**startTime** +
+__必填__|预定开始时间 +
+**样例** : `"2023-01-25 13:00:10"`|string (date-time)
+|===
+
+
+[[_loginquery]]
+=== LoginQuery
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**password** +
+__必填__|密码 +
+**样例** : `"asdf1234"`|string
+|**userName** +
+__必填__|用户名 +
+**样例** : `"Tom"`|string
+|===
+
+
+[[_response]]
+=== Response
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**code** +
+__可选__|**样例** : `0`|integer (int32)
+|**data** +
+__可选__|**样例** : `"object"`|object
+|**msg** +
+__可选__|**样例** : `"string"`|string
+|===
+
+
+[[_uservo]]
+=== UserVo
+用户注册信息
+
+
+[options="header", cols=".^3,.^11,.^4"]
+|===
+|名称|说明|类型
+|**email** +
+__可选__|电子邮箱 +
+**样例** : `"000000000@qq.com"`|string
+|**password** +
+__必填__|密码 +
+**样例** : `"asdf1234"`|string
+|**phone** +
+__可选__|电话号码 +
+**样例** : `"000-0000-0000"`|string
+|**userName** +
+__必填__|用户名 +
+**样例** : `"Tom"`|string
+|===
+
+
+
+
+

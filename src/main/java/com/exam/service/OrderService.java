@@ -55,6 +55,7 @@ public class OrderService {
 
     /**
      * 预定
+     *
      * @param userId
      * @param modelId
      * @param durationVo
@@ -69,12 +70,12 @@ public class OrderService {
         // 查询车型信息
         CarModel carModel = cacheManager.getCarModelById(modelId);
 
-        if(CollectionUtils.isEmpty(carIdList) || carModel == null){
+        if (CollectionUtils.isEmpty(carIdList) || carModel == null) {
             return Response.fail(ResultCode.MODEL_NOT_EXISTS);
         }
 
         // 创建订单
-        Order order = createOrder(startTime, endTime,userId, carModel.getPrice());
+        Order order = createOrder(startTime, endTime, userId, carModel.getPrice());
 
         order.setId(-1);
 
@@ -108,13 +109,14 @@ public class OrderService {
 
     /**
      * 创建订单
+     *
      * @param startTime
      * @param endTime
      * @param userId
      * @param price
      * @return
      */
-    private static Order createOrder(Date startTime, Date endTime,int userId, BigDecimal price) {
+    private static Order createOrder(Date startTime, Date endTime, int userId, BigDecimal price) {
         long dur = endTime.getTime() - startTime.getTime();
 
         int days = (int) (dur % MILLS_ONE_DAY == 0 ? dur / MILLS_ONE_DAY : dur / MILLS_ONE_DAY + 1);
@@ -130,6 +132,7 @@ public class OrderService {
 
     /**
      * 支付
+     *
      * @param userId
      * @param orderId
      * @return
@@ -147,18 +150,18 @@ public class OrderService {
         }
         // 订单状态不正确或已存在支付记录
         Payment exist = paymentMapper.selectPaymentByOrderId(orderId);
-        if(order.getStatus() != 0 || Objects.nonNull(exist)){
+        if (order.getStatus() != 0 || Objects.nonNull(exist)) {
             return Response.fail(ResultCode.PAY_FAILED);
         }
 
         Payment payment = new Payment();
         payment.setOrderId(order.getId());
         payment.setAmount(order.getAmount());
-        try{
+        try {
             paymentMapper.addPayment(payment);
             paymentMapper.updateStatusByPaymentId(1, payment.getId());
             orderMapper.updateStatusByOrderId(orderId, 1);
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("支付失败", e);
             return Response.fail(ResultCode.SYSTEM_ERROR);
         }
@@ -168,6 +171,7 @@ public class OrderService {
 
     /**
      * 查询用户订单
+     *
      * @param userId
      * @return
      */
@@ -177,6 +181,7 @@ public class OrderService {
 
     /**
      * 取消订单（退款）
+     *
      * @param userId
      * @param orderId
      * @return
@@ -184,7 +189,7 @@ public class OrderService {
     public Response cancel(int userId, int orderId) {
         Order order = orderMapper.selectOrderById(orderId);
 
-        if (order == null || order.getUserId() != userId) {
+        if (order == null) {
             return Response.fail(ResultCode.ORDER_NOT_EXISTS);
         }
 
@@ -192,7 +197,7 @@ public class OrderService {
             return Response.fail(ResultCode.USER_HAS_NO_RIGHT);
         }
 
-        try{
+        try {
             switch (order.getStatus()) {
                 case 0:
                     orderMapper.updateStatusByOrderId(orderId, 4);
@@ -215,7 +220,7 @@ public class OrderService {
                     return Response.fail(ResultCode.CANCEL_FAILED, order);
 
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error("取消订单失败", e);
             return Response.fail(ResultCode.SYSTEM_ERROR);
         }

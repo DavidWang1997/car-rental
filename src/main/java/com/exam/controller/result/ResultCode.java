@@ -2,13 +2,14 @@ package com.exam.controller.result;
 
 /**
  * 返回结果code枚举
+ *
  * @author wangpeng
  */
 public enum ResultCode {
     SUCCESS(1, "成功"),
     FAIL(2, "失败"),
 
-    SYSTEM_ERROR(3,"系统异常"),
+    SYSTEM_ERROR(3, "系统异常"),
 
     PARAM_CHECK_FAILED(1001, "参数校验不通过"),
 
@@ -29,15 +30,15 @@ public enum ResultCode {
 
     ;
 
-    private Integer code;
+    private int code;
     private String msg;
 
-    ResultCode(Integer code, String msg){
+    ResultCode(Integer code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
-    public Integer getCode() {
+    public int getCode() {
         return code;
     }
 

@@ -73,6 +73,7 @@ public class UserService {
             userMapper.addUser(user);
         }catch (Exception e){
             LOGGER.error("注册失败",e);
+            return Response.fail(ResultCode.SYSTEM_ERROR);
         }
         return Response.success(true);
     }

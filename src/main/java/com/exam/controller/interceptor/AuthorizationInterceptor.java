@@ -21,6 +21,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * 鉴权处理
+     *
      * @param request
      * @param response
      * @param handler
@@ -35,7 +36,6 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
         // 从request中得到token
         String token = request.getHeader("token");
-        System.out.println(token);
         Map<String, Object> result = Tokenizer.validToken(token);
         String state = (String) result.get("state");
         if (state.equals(TokenState.VALID.toString())) {
